@@ -1,9 +1,22 @@
 # claude-obsidian: Agent Instructions
 
 claude-obsidian is a local-first Agent Skills package for building source-cited,
-compounding Obsidian knowledge bases. It also ships a Claude Code plugin adapter.
-The portable workflow is implemented in `skills/` and the standard-library
+compounding Obsidian knowledge bases. Codex is the primary portable Agent Skills
+host, and the repository also ships a Claude Code plugin adapter. The portable
+workflow is implemented in `skills/` and the standard-library
 `claude_obsidian/` core; host hooks never define knowledge behavior.
+
+## Host model
+
+- Codex is the default portable host. User-level skills are discovered from
+  `~/.agents/skills/<name>/SKILL.md` and are linked from the canonical
+  `skills/<name>/` directories by `bin/setup-multi-agent.sh`.
+- OpenCode, Gemini, Cursor, and Windsurf are compatibility hosts selected
+  explicitly with `--host`.
+- Claude Code remains supported through the plugin adapter and namespaced skill
+  invocation. Claude-specific hooks are compatibility infrastructure only.
+- Do not fork knowledge behavior by host. Change canonical behavior in
+  `skills/` or `claude_obsidian/`, then adapt host exposure separately.
 
 ## Product and vault boundaries
 
@@ -12,7 +25,8 @@ The portable workflow is implemented in `skills/` and the standard-library
   and `.raw/`. Mutable state always belongs there.
 - `templates/vault/` is the distributable seed. Root `wiki/`, `.raw/`, and
   `.vault-meta/` are contributor state and are excluded from public artifacts.
-- Never derive a user vault from the plugin cache or `${CLAUDE_PLUGIN_ROOT}`.
+- Never derive a user vault from the plugin cache, a host skill directory, or
+  `${CLAUDE_PLUGIN_ROOT}`.
 - A checkout containing contributor-vault state has no marketplace catalog.
   `config/public-marketplace.json` is injected as
   `.claude-plugin/marketplace.json` only inside the audited release artifact.
@@ -38,8 +52,9 @@ vault at or above the current directory. Fail closed when no vault is selected.
 
 All 15 skills live at `skills/<name>/SKILL.md`. They use the portable Agent
 Skills frontmatter subset: exactly `name` and `description`. Do not add mirrored
-files under `commands/`; Claude invokes plugin skills by namespaced names such
-as `/claude-obsidian:wiki`.
+files under `commands/`. Codex and other portable hosts use their native Agent
+Skills discovery; Claude invokes plugin skills by namespaced names such as
+`/claude-obsidian:wiki`.
 
 Core workflows are `wiki`, `save`, `wiki-ingest`, `wiki-query`, and
 `wiki-lint`. Extensions are `autoresearch`, `canvas`, `defuddle`, `wiki-fold`,
@@ -92,6 +107,7 @@ workspace-configured vault outside the project also requires an exact
 
 ## Reference
 
+- Codex primary-host guide: `docs/codex-guide.md`
 - Public canonical repository: https://github.com/AgriciDaniel/claude-obsidian
 - LLM Wiki pattern: https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f
 - Obsidian primitives: https://github.com/kepano/obsidian-skills

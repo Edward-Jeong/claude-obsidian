@@ -54,7 +54,8 @@ not convert the product repository into a user vault.
 
 ## Portable Agent Skills hosts
 
-The installer defaults to a no-write preview for Codex, OpenCode, and Gemini:
+The installer defaults to a no-write preview for Codex only. OpenCode, Gemini,
+Cursor, and Windsurf remain explicit compatibility hosts selected with `--host`:
 
 ```bash
 bash bin/setup-multi-agent.sh
@@ -68,6 +69,13 @@ without writing:
 
 ```bash
 bash bin/setup-multi-agent.sh --check
+```
+
+OpenCode and Gemini can be selected explicitly:
+
+```bash
+bash bin/setup-multi-agent.sh --host opencode --apply
+bash bin/setup-multi-agent.sh --host gemini --apply
 ```
 
 Cursor and Windsurf use workspace-local discovery and require an explicit
