@@ -16,7 +16,8 @@ usage() {
 Usage: bin/setup-multi-agent.sh [--check|--dry-run|--apply]
        [--host codex|opencode|gemini|cursor|windsurf|all] [--workspace PATH]
 
-Default: dry-run for Codex, OpenCode, and Gemini user-level per-skill links.
+Default: dry-run for Codex user-level per-skill links.
+Use --host to opt into OpenCode, Gemini, Cursor, or Windsurf compatibility.
 Cursor and Windsurf require an explicit --workspace destination.
 Existing files and links pointing elsewhere are never replaced.
 EOF
@@ -47,7 +48,7 @@ done
 [ -d "$SKILLS_DIR" ] || { echo "ERROR: missing skills directory: $SKILLS_DIR" >&2; exit 2; }
 
 if [ "$HOST_COUNT" -eq 0 ]; then
-  HOSTS=(codex opencode gemini)
+  HOSTS=(codex)
 fi
 
 expanded=()
